@@ -10,6 +10,7 @@ from fileUtilities import *
 
 # general variables
 baseDirectory = "C:\\Users\\parag\\Documents\\BCDems\\ElectionData\\"
+outputDirectory = "C:\\Users\\parag\\Documents\\BCDems\\Results\\"
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -26,13 +27,13 @@ if __name__ == '__main__':
     print("Received " + str(len(butlerCountyGeneralElection2020)) + " county-specific results")
 
     compareCandidatesSameYear('BIDEN', 'JOSEPH', 'SHAPIRO ', 'JOSHUA',
-                              butlerCountyGeneralElection2020, baseDirectory,
+                              butlerCountyGeneralElection2020, baseDirectory, outputDirectory,
                               "BidenVShapiro2020General.csv")
     compareCandidatesSameYear('BIDEN', 'JOSEPH', 'LAMB', 'CONOR',
-                              butlerCountyGeneralElection2020, baseDirectory,
+                              butlerCountyGeneralElection2020, baseDirectory, outputDirectory,
                               "BidenVLamb2020General.csv")
     compareCandidatesSameYear('SMITH', 'DANIEL', 'METCALFE', 'DARYL',
-                              butlerCountyGeneralElection2020, baseDirectory,
+                              butlerCountyGeneralElection2020, baseDirectory, outputDirectory,
                               "SmithVMetcalfe2020General.csv")
 
     # Now, let's pull out all the Biden 2020 results from Butler County

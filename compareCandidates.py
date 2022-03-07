@@ -2,9 +2,11 @@ from generalElectionDataUtilities import *
 from butlerCountySpecific import *
 from fileUtilities import *
 
+
 # This will compare general election performance of two candidates, and write the
 # results out to a CSV file - sorted by precinct
-def compareCandidatesSameYear(candidate1, first1, candidate2, first2, electionData, baseDirectory, outputFileName):
+def compareCandidatesSameYear(candidate1, first1, candidate2, first2, electionData, baseDirectory,
+                              outputDirectory, outputFileName):
 
     # First, we take our entire general election data file, and pull out all data specific to
     # a single candidate
@@ -21,7 +23,7 @@ def compareCandidatesSameYear(candidate1, first1, candidate2, first2, electionDa
     combinedResults = combineResultsByPrecinct(c1PrecinctResultsCombined, candidate1,
                                                c2PrecinctResultsCombined, candidate2)
 
-    outputResultsToCSVFile(combinedResults, baseDirectory, outputFileName)
+    outputResultsToCSVFile(combinedResults, outputDirectory, outputFileName)
 
 
 
