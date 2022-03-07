@@ -6,6 +6,7 @@
 from butlerCountySpecific import *
 from compareCandidates import *
 from generalElectionDataUtilities import *
+from voterRegistrationDataUtilities import *
 from fileUtilities import *
 
 # general variables
@@ -51,7 +52,14 @@ def process2020GeneralElectionResults(countyMap):
 def processVoterTurnoutComparison2016v2020(countyMap):
 
     voterRegistration2016 = loadElectionData(baseDirectory, '2016\\VoterRegistration_2016_Primary_Precinct.csv')
+    electionData2016 = loadElectionData(baseDirectory, '2016\\ElectionReturns_2016_General_PrecinctReturns.csv')
     voterRegistration2020 = loadElectionData(baseDirectory, '2020\\VoterRegistration_2020_General_Precinct.csv')
+    electionData2020 = loadElectionData(baseDirectory, '2020\\ElectionReturns_2020_General_PrecinctReturns.csv')
+
+    processedRegistrationData2016 = extractVoterRegistrationTurnoutByPrecinct(voterRegistration2016,
+                                                                              electionData2016, countyMap, "2016")
+    processedRegistrationData2020 = extractVoterRegistrationTurnoutByPrecinct(voterRegistration2020,
+                                                                              electionData2020, countyMap, "2020")
 
 
 # Press the green button in the gutter to run the script.

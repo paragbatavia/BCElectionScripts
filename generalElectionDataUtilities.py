@@ -1,5 +1,6 @@
 from filterUtilities import *
 
+
 # Takes in election data structure, and returns a list of dictionary elements
 # that only have data for the specified candidate.
 def filterGeneralElectionResultsByCandidateName(electionData, lastName, firstName):
