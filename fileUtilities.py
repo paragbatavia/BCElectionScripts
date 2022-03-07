@@ -1,5 +1,6 @@
 import csv
 
+
 def loadCountyMap(baseDirectory, fileName):
     # Loads in a map of county names to county numbers
 
@@ -33,7 +34,6 @@ def loadElectionData(baseDirectory, fileName):
 
     # This is a list of dictionary items, with the keys being the top row of the CSV file
     return electionData
-
 
 
 def outputResultsToCSVFile(results, baseDirectory, fileName):

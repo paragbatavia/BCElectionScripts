@@ -12,16 +12,17 @@ from fileUtilities import *
 baseDirectory = "C:\\Users\\parag\\Documents\\BCDems\\ElectionData\\"
 outputDirectory = "C:\\Users\\parag\\Documents\\BCDems\\Results\\"
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    # This will load in a map that maps county names to county numbers - required to search for
-    # county-specific election results
-    countyMap = loadCountyMap(baseDirectory, 'CountyMap.csv')
+
+# This will process 2020 general election results and generate three CSV files:
+# A comparison of Biden v. Shapiro results by precinct
+# A comparison of Biden v. Lamb results by precinct
+# A comparison of Dan Smit v. Metcalfe results by precinct
+def process2020GeneralElectionResults(countyMap):
     # This will load in all of 2020's general election results
-    generalElectionResults2020 = loadElectionData(baseDirectory, 'ElectionReturns_2020_General_PrecinctReturns.csv')
+    generalElectionResults2020 = loadElectionData(baseDirectory, '2020\\ElectionReturns_2020_General_PrecinctReturns.csv')
 
     # Now we'll filter out only the Butler County results. Can put any county name in here
-    butlerCountyGeneralElection2020 = filterResultsByCounty(generalElectionResults2020, countyMap, 'Butler')
+    butlerCountyGeneralElection2020 = filterResultsByCounty(generalElectionResults2020, localCountyMap, 'Butler')
 
     print("main(): Read in " + str(len(generalElectionResults2020)) + " election records")
     print("Received " + str(len(butlerCountyGeneralElection2020)) + " county-specific results")
@@ -36,19 +37,33 @@ if __name__ == '__main__':
                               butlerCountyGeneralElection2020, baseDirectory, outputDirectory,
                               "SmithVMetcalfe2020General.csv")
 
-    # Now, let's pull out all the Biden 2020 results from Butler County
-    # bidenResults = filterResultsByCandidateLastName(butlerCountyGeneralElection2020, 'BIDEN')
-    # Note - had to add an extra space after SHAPIRO for Butler county only because that's how the data is
-    # shapiroResults = filterResultsByCandidateLastName(butlerCountyGeneralElection2020, 'SHAPIRO ')
 
-    # Create version that only has desired data (precinct code, last name, first name, vote total)
-    # bidenFilteredResults = getResultsByPrecinct(bidenResults)
-    # shapiroFilteredResults = getResultsByPrecinct(shapiroResults)
+# This will generate a CSV file with the following results, by precinct
+#  - 2016 Dems Registered (Primary data only available)
+#  - 2016 Dems Voted (Primary data only available)
+#  - 2016 % Turnout
+#  - 2016 Raw vote count
+#  - 2020 Dems Registered (Based on general election registration data)
+#  - 2020 Dems Registered (Based on general election registration data)
+#  - 2020 % Turnout
+#  - 2020 Raw vote count
+#  - Delta in turnout
+def processVoterTurnoutComparison2016v2020(countyMap):
 
-    # combinedResults = combineResultsByPrecinct(bidenFilteredResults, "Biden", shapiroFilteredResults, "Shapiro")
-    # print("Received " + str(len(bidenResults)) + " Biden-specific results")
-    # print("Received " + str(len(shapiroResults)) + " Shapiro-specific results")
+    voterRegistration2016 = loadElectionData(baseDirectory, '2016\\VoterRegistration_2016_Primary_Precinct.csv')
+    voterRegistration2020 = loadElectionData(baseDirectory, '2020\\VoterRegistration_2020_General_Precinct.csv')
 
-    # outputResultsToCSVFile(combinedResults, "BidenVShapiro2020General.csv")
+
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    # This will load in a map that maps county names to county numbers - required to search for
+    # county-specific election results
+    localCountyMap = loadCountyMap(baseDirectory, 'CountyMap.csv')
+
+    # process2020GeneralElectionResults(localCountyMap)
+    processVoterTurnoutComparison2016v2020(localCountyMap)
+
+
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

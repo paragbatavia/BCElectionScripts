@@ -1,24 +1,8 @@
-# Takes in a list of dictionaries of election data, returns a map of all
-# election data specific to that county only
-def filterResultsByCounty(electionData, countyData, countyName):
-
-    # filter the county dictionary list to find the passed in county name
-    # countyDict = list(filter(lambda county: county['County'] == countyName, electionData))
-    countyDict = next(item for item in countyData if item['County'] == str(countyName))
-    countyNumber = countyDict['Code']
-
-    # filteredResult = next(item for item in electionData if item['CountyCode'] == str(countyNumber))
-    filteredResult = list(filter(lambda county: county['CountyCode'] == countyNumber, electionData))
-
-    # print("county name = " + countyName + " county number = " + str(countyNumber))
-
-    # print(filteredResult)
-    return filteredResult
-
+from filterUtilities import *
 
 # Takes in election data structure, and returns a list of dictionary elements
 # that only have data for the specified candidate.
-def filterResultsByCandidateName(electionData, lastName, firstName):
+def filterGeneralElectionResultsByCandidateName(electionData, lastName, firstName):
     # NOTE - This assumes last name filter only
 
     filteredResult = list(filter(lambda name: name['LastName'] == lastName and name['FirstName'] == firstName,
@@ -29,7 +13,7 @@ def filterResultsByCandidateName(electionData, lastName, firstName):
 
 # This will take data filtered by county by candidate, and create a dictionary with the following entries
 # PrecinctCode, LastName, FirstName, VoteTotal
-def getResultsByPrecinct(electionData):
+def getGeneralElectionResultsByPrecinct(electionData):
 
     desiredKeys = {'PrecinctCode', 'LastName', 'FirstName', 'VoteTotal', 'MunicipalityName'}
 
@@ -52,7 +36,7 @@ def getResultsByPrecinct(electionData):
 # into a new dictionary and append to results list.
 # Note - this assumes that precincts may be arbitrarily ordered between the two
 # lists, when in reality they always seem to be in the same order.
-def combineResultsByPrecinct(results1, title1, results2, title2):
+def combineGeneralElectionResultsByPrecinct(results1, title1, results2, title2):
 
     precinctKey = "PrecinctCode"
     precinctNameKey = "PrecinctName"
