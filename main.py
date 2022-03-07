@@ -56,10 +56,13 @@ def processVoterTurnoutComparison2016v2020(countyMap):
     voterRegistration2020 = loadElectionData(baseDirectory, '2020\\VoterRegistration_2020_General_Precinct.csv')
     electionData2020 = loadElectionData(baseDirectory, '2020\\ElectionReturns_2020_General_PrecinctReturns.csv')
 
-    processedRegistrationData2016 = extractVoterRegistrationTurnoutByPrecinct(voterRegistration2016,
-                                                                              electionData2016, countyMap, "2016")
-    processedRegistrationData2020 = extractVoterRegistrationTurnoutByPrecinct(voterRegistration2020,
-                                                                              electionData2020, countyMap, "2020")
+    finalData = processVoterTurnoutComparison(voterRegistration2016, electionData2016, "2016",
+                                              voterRegistration2020, electionData2020, "2020",
+                                              countyMap)
+
+    outputResultsToCSVFile(finalData, outputDirectory, "Turnout2016v2020.csv")
+
+
 
 
 # Press the green button in the gutter to run the script.

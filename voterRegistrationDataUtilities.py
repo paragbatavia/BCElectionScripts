@@ -3,7 +3,6 @@ from filterUtilities import *
 
 
 def extractDemRegisteredByPrecinct(registrationData):
-
     # This will create a simple list of dictionaries with the following entries:
     # - Municipality Code
     # - Municipality Name
@@ -27,7 +26,6 @@ def extractDemRegisteredByPrecinct(registrationData):
 # votes across all elections, and take the maximum.
 # NOTE: We assume the passed in electionData is already filtered by County
 def extractTurnoutByPrecinct(electionData):
-
     # Create a list of dictionaries that is filtered by the following
     #  - OfficeCode == 'USP' (US President)
     #  - PartyCode == 'DEM' (Democrat)
@@ -56,11 +54,11 @@ def extractTurnoutByPrecinct(electionData):
 #  - Dems Voted
 #  - % of dems registered who voted
 def combineRegistrationAndElectionDataByPrecinct(demRegistered, demTurnout, titlePrefix):
-
     precinctKey = "PrecinctCode"
     precinctNameKey = "PrecinctName"
     registeredKey = titlePrefix + "_DemsRegistered"
     votedKey = titlePrefix + "_DemsVoted"
+    turnoutKey = titlePrefix + "_TurnoutPercentage"
 
     combined = []
     for x in demRegistered:
@@ -76,8 +74,13 @@ def combineRegistrationAndElectionDataByPrecinct(demRegistered, demTurnout, titl
         demsVoted = dict2['VoteTotal']
         municipalityName = dict2['MunicipalityName']
 
+        if float(demsRegistered) >= 1:
+            turnout = float(demsVoted) / float(demsRegistered)
+        else:
+            turnout = 0.0
+
         newItem = {precinctKey: precinct, precinctNameKey: municipalityName, registeredKey: demsRegistered,
-                   votedKey: demsVoted}
+                   votedKey: demsVoted, turnoutKey: str(turnout)}
 
         # print(newItem)
         combined.append(newItem)
@@ -85,8 +88,27 @@ def combineRegistrationAndElectionDataByPrecinct(demRegistered, demTurnout, titl
     return combined
 
 
-def extractVoterRegistrationTurnoutByPrecinct(registrationData, electionData, countyData, prefixTitle):
+def combineVoterTurnoutByYearByPrecinct(turnoutData1, turnoutData2):
+    turnoutKeys1 = turnoutData1[0].keys()
+    turnoutKeys2 = turnoutData2[0].keys()
 
+    combined = []
+    for x in turnoutData1:
+        precinct = x['PrecinctCode']
+        dict2 = next((item for item in turnoutData2 if item['PrecinctCode'] == str(precinct)), None)
+        if not dict2:
+            continue
+        # Now = we need to combine x and dict2 into a single dictionary
+        newDict = {}
+        newDict.update(x)
+        newDict.update(dict2)
+
+        combined.append(newDict)
+
+    return combined
+
+
+def extractVoterRegistrationTurnoutByPrecinct(registrationData, electionData, countyData, prefixTitle):
     # This will take all the registration data, and throw out anything that's
     # not for Butler County
     countyOnlyRegistrationResults = filterResultsByCounty(registrationData, countyData, 'Butler')
@@ -97,11 +119,16 @@ def extractVoterRegistrationTurnoutByPrecinct(registrationData, electionData, co
 
     combinedData = combineRegistrationAndElectionDataByPrecinct(demRegistered, demTurnout, prefixTitle)
 
-    print(combinedData)
+    return combinedData
 
 
+def processVoterTurnoutComparison(voter1, election1, prefix1, voter2, election2, prefix2, countyMap):
 
+    processed1 = extractVoterRegistrationTurnoutByPrecinct(voter1, election1, countyMap, prefix1)
 
+    processed2 = extractVoterRegistrationTurnoutByPrecinct(voter2, election2, countyMap, prefix2)
 
+    finalData = combineVoterTurnoutByYearByPrecinct(processed1, processed2)
+    # print(finalData)
 
-
+    return finalData
