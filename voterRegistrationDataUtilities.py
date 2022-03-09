@@ -3,10 +3,14 @@ from filterUtilities import *
 
 
 def extractDemRegisteredByPrecinct(registrationData):
-    # This will create a simple list of dictionaries with the following entries:
-    # - Municipality Code
-    # - Municipality Name
-    # - Registered Dems
+    """
+    This will create a simple list of dictionaries with the following entries:
+    - Municipality Code
+    - Municipality Name
+    - Registered Dems
+    :param registrationData:
+    :return:
+    """
 
     desiredKeys = {'PrecinctCode', 'MunicipalityName', 'DemRegistered'}
 
@@ -19,13 +23,19 @@ def extractDemRegisteredByPrecinct(registrationData):
     return filteredResult
 
 
-# So, our approach here is to look at Democratic turnout only in the US Presidential
-# election - this may not reflect full turnout - it misses the cases where Dems may
-# have voted in the presidential election for a different candidate than in a
-# down-ballot election. The 'right' way to do this would be to look at all Dem
-# votes across all elections, and take the maximum.
-# NOTE: We assume the passed in electionData is already filtered by County
 def extractTurnoutByPrecinct(electionData):
+    """
+    So, our approach here is to look at Democratic turnout only in the US Presidential
+    election - this may not reflect full turnout - it misses the cases where Dems may
+    have voted in the presidential election for a different candidate than in a
+    down-ballot election. The 'right' way to do this would be to look at all Dem
+    votes across all elections, and take the maximum.
+    NOTE: We assume the passed in electionData is already filtered by County
+
+    :param electionData:
+    :return:
+    """
+
     # Create a list of dictionaries that is filtered by the following
     #  - OfficeCode == 'USP' (US President)
     #  - PartyCode == 'DEM' (Democrat)
@@ -44,16 +54,24 @@ def extractTurnoutByPrecinct(electionData):
     return finalResult
 
 
-# This takes in two lists of dictionaries - both filtered by County, one
-# which contains dem voter registration data, and one which contains
-# dem turnout data (for a specific election, usually US President),
-# and combines it into a new list of dictionaries that contains the following
-#  - Precinct Code
-#  - Municipality Name
-#  - Dems Registered
-#  - Dems Voted
-#  - % of dems registered who voted
-def combineRegistrationAndElectionDataByPrecinct(demRegistered, demTurnout, titlePrefix):
+def combineRegistrationAndElectionDataByPrecinct(demRegistered, demTurnout, titlePrefix: str):
+    """
+    This takes in two lists of dictionaries - both filtered by County, one
+    which contains dem voter registration data, and one which contains
+    dem turnout data (for a specific election, usually US President),
+    and combines it into a new list of dictionaries that contains the following
+     - Precinct Code
+     - Municipality Name
+     - Dems Registered
+     - Dems Voted
+     - % of dems registered who voted
+
+    :param demRegistered:
+    :param demTurnout:
+    :param titlePrefix:
+    :return:
+    """
+
     precinctKey = "PrecinctCode"
     precinctNameKey = "PrecinctName"
     registeredKey = titlePrefix + "_DemsRegistered"
@@ -89,6 +107,15 @@ def combineRegistrationAndElectionDataByPrecinct(demRegistered, demTurnout, titl
 
 
 def combineVoterTurnoutByYearByPrecinct(turnoutData1, turnoutData2):
+    """
+    This routine takes in two lists of dictionaries, each of which contains turnout information,
+    and combines them.
+
+    :param turnoutData1: voter turnout data for first comparison year
+    :param turnoutData2: voter turnout data for second comparison year
+    :return: single list of dictionaries that merges the (key,values) of both passed in dictionaries
+    """
+
     turnoutKeys1 = turnoutData1[0].keys()
     turnoutKeys2 = turnoutData2[0].keys()
 
@@ -109,8 +136,23 @@ def combineVoterTurnoutByYearByPrecinct(turnoutData1, turnoutData2):
 
 
 def extractVoterRegistrationTurnoutByPrecinct(registrationData, electionData, countyData, prefixTitle):
-    # This will take all the registration data, and throw out anything that's
-    # not for Butler County
+    """
+    This function takes in registration data and results data, pulls out all the Butler county
+    data, and then creates a single output list of dictionaries that only includes the following
+    keys:
+    - Precinct Code
+    - Municipality Name
+    - Dems Registered
+    - Dems Voted
+    - % of dems registered who voted-
+
+    :param registrationData: list of dictionaries of registration data
+    :param electionData: list of dictionaries of election results data
+    :param countyData: list of dictionaries of county mapping data
+    :param prefixTitle: string that contains prefix to add to return value dictionary keys
+    :return: a list of dictionaries that combines selected data from both data sets
+    """
+
     countyOnlyRegistrationResults = filterResultsByCounty(registrationData, countyData, 'Butler')
     countyOnlyElectionResults = filterResultsByCounty(electionData, countyData, 'Butler')
 
@@ -123,6 +165,24 @@ def extractVoterRegistrationTurnoutByPrecinct(registrationData, electionData, co
 
 
 def processVoterTurnoutComparison(voter1, election1, prefix1, voter2, election2, prefix2, countyMap):
+    """
+    This is a top-level routine to process and compare voter turnout information across two different
+    sets of data.
+
+    Args:
+        voter1: list of dictionaries of registration data
+        election1: list of dictionaries of election results data
+        prefix1 (str): text prefix to be applied to output columns, typically denotes data year
+        voter2: list of dictionaries of registration data for second year
+        election2: list of dictionaries of election results data for second year
+        prefix2 (str): text prefix to be applied to output columns, typically denotes data year
+        countyMap: list of dictionaries that maps county number to county name, used for filtering data
+
+    Returns:
+        List of dictionaries that combines turnout data with election results data across two
+        comparison years.
+
+    """
 
     processed1 = extractVoterRegistrationTurnoutByPrecinct(voter1, election1, countyMap, prefix1)
 
