@@ -77,7 +77,6 @@ if __name__ == '__main__':
     localCountyMap = loadCountyMap(baseDirectory, 'CountyMap.csv')
     precinctMap = loadPrecinctMap(baseDirectory, 'VoterRolls\\Butler_Zone_Codes.csv')
 
-
     # process2020GeneralElectionResults(localCountyMap)
     # processVoterTurnoutComparison2016v2020(localCountyMap)
 
@@ -92,6 +91,10 @@ if __name__ == '__main__':
     registeredDems2020 = loadVoterRegistrationData(baseDirectory, registeredFileName2020, 10)
     registeredDems2016 = loadVoterRegistrationData(baseDirectory, registeredFileName2016, 10)
 
-
+    # ToDo: Iterate over every zone code in the precinct / zone map, and search both the
+    # ToDo: registered voter maps and voter turnout maps for data for those zones. For
+    # ToDo: any that have data in all four maps, create a TurnoutComparison type and add to a list
+    # ToDo: After the basic data is added in, write a function to post process by calculating teh
+    # ToDo: various percentage changes over time, etc.
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
