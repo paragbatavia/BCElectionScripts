@@ -78,23 +78,13 @@ if __name__ == '__main__':
     precinctMap = loadPrecinctMap(baseDirectory, 'VoterRolls\\Butler_Zone_Codes.csv')
 
     # process2020GeneralElectionResults(localCountyMap)
-    # processVoterTurnoutComparison2016v2020(localCountyMap)
 
-    # Test stuff for voter turnout calculations
-    fileName2020 = 'VoteBuilderData\\DemTurnoutByYear2020.csv'
-    fileName2016 = 'VoteBuilderData\\DemTurnoutByYear2016.csv'
-    registeredFileName2020 = 'ReturnsData\\2020\\VoterRegistration_2020_General_Precinct.csv'
-    registeredFileName2016 = 'ReturnsData\\2016\\VoterRegistration_2016_Primary_Precinct.csv'
-    voterTurnout2020 = loadVoterTurnoutData(baseDirectory, fileName2020, 2020)
-    voterTurnout2016 = loadVoterTurnoutData(baseDirectory, fileName2016, 2016)
-    # Butler county is 10
-    registeredDems2020 = loadVoterRegistrationData(baseDirectory, registeredFileName2020, 10)
-    registeredDems2016 = loadVoterRegistrationData(baseDirectory, registeredFileName2016, 10)
+    turnoutComparison = compareYoYDemTurnout(baseDirectory, precinctMap)
+    header = ['Precinct Code', 'Precinct Name', 'Year 1 Year', '2016 Dems Registered', '2016 Dems Voted',
+              '2016 Turnout %', 'Year 2 Year', '2020 Dems Registered', '2020 Dem Voted', '2020 Turnout %',
+              'YoY Registration Change %', 'YoY Turnout Change %']
+    outputResultsToCSVFile(turnoutComparison, outputDirectory, 'TurnoutComparison2016v2020.csv', header)
 
-    # ToDo: Iterate over every zone code in the precinct / zone map, and search both the
-    # ToDo: registered voter maps and voter turnout maps for data for those zones. For
-    # ToDo: any that have data in all four maps, create a TurnoutComparison type and add to a list
-    # ToDo: After the basic data is added in, write a function to post process by calculating teh
-    # ToDo: various percentage changes over time, etc.
+    print(turnoutComparison)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

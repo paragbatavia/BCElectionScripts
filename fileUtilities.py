@@ -29,10 +29,14 @@ def loadPrecinctMap(baseDirectory: str, fileName: str) -> List[PrecinctMap]:
     with open(fullFileName, newline='') as csvfile:
         reader = csv.DictReader(csvfile, dialect='excel')
         for row in reader:
-            zone = row['ZoneCode']
-            title = row['ZoneTitle']
-            mapItem = {'PrecinctNumber': zone,
-                       'PrecinctName': title}
+            rzone = row['RegisteredDataPrecinctCode']
+            rtitle = row['RegisteredDataPrecinctName']
+            vzone = row['VoteBuilderPrecinctCode']
+            vtitle = row['VoteBuilderPrecinctName']
+            mapItem = {'RegisteredDataPrecinctNumber': rzone,
+                       'RegisteredDataPrecinctName': rtitle,
+                       'VoteBuilderPrecinctNumber': vzone,
+                       'VoteBuilderPrecinctName': vtitle}
             precinctMap.append(mapItem)
 
     return precinctMap
@@ -88,7 +92,9 @@ def loadVoterRegistrationData(baseDirectory: str, fileName: str, county: int) ->
 
 def loadVoterTurnoutData(baseDirectory: str, fileName: str, year: int) -> List[TurnoutData]:
     """
-    Read in turnout data spreadsheet from file, and returns a list of structs
+    Read in turnout data spreadsheet from file, and returns a list of structs.
+    This turnout data comes from VoteBuilder, and is already filtered by Butler County already,
+    so no need to further filter the data.
     :param year:
     :param baseDirectory:
     :param fileName:
@@ -115,15 +121,21 @@ def loadVoterTurnoutData(baseDirectory: str, fileName: str, year: int) -> List[T
     return turnoutData
 
 
-def outputResultsToCSVFile(results, baseDirectory, fileName):
+def outputResultsToCSVFile(results: List, baseDirectory: str, fileName: str, header: List = None):
     # Writes the passed in list of dictionaries to a CSV file
     fullFileName = baseDirectory + fileName
 
     with open(fullFileName, 'w', newline='') as csvfile:
         fieldNames = results[0].keys()
-        writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
+        # writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
+        writer = csv.writer(csvfile)
 
-        writer.writeheader()
+        if not header:
+            # writer.writeheader()
+            print('Hello')
+        else:
+            writer.writerow(dict(zip(header, header)))
         for x in results:
-            writer.writerow(x)
+            # writer.writerow(x)
+            writer.writerow([x[k] for k in fieldNames])
 

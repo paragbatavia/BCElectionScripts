@@ -9,8 +9,17 @@ class CountyMap(TypedDict):
 
 
 class PrecinctMap(TypedDict):
-    PrecinctNumber: int
-    PrecinctName: str
+    """
+    This structure holds mappings from precinct code to precinct name
+    In addition, the mapping of codes to names is different depending
+    on the data source (PA DoS Voter Registration Data vs. Vote Builder
+    Turnout data. Therefor we maintain both mappings, so we can
+    search for data in both data sources based on index
+    """
+    RegisteredDataPrecinctNumber: int
+    RegisteredDataPrecinctName: str
+    VoteBuilderPrecinctNumber: int
+    VoteBuilderPrecinctName: str
 
 
 class TurnoutData(TypedDict):
@@ -49,5 +58,6 @@ class TurnoutComparison(TypedDict):
     Y2DemsRegistered: int
     Y2DemsVoted: int
     Y2TurnoutPercentage: float
+    Y1Y2RegistrationChangePercentage: float
     Y1Y2TurnoutChangePercentage: float
 

@@ -1,6 +1,8 @@
 # This contains functions specific only to Butler County data. It's in a separate file
 # for when we ultimately use this for other counties.
 import copy
+from typing import *
+from dataTypes import *
 
 
 # This function combines vote totals for specific precincts that are split between two
@@ -91,3 +93,70 @@ def combineButlerCongressionalDistrictData(electionData):
                                                                 "JEFFERSON X II", 8005)
 
     return electionData
+
+
+def combineButlerVoterRegistrationDataByPrecinctCodes(registrationData: List[RegisteredVoterData],
+                                                      precinct1: int, precinct2: int, outputPrecinct: int):
+    """
+    Voter Registration data from the DoS is split by congressional district in some cases. The data
+    from other sources, like VoteBuilder for turnout data, isn't. So, we need to combine the
+    congressional district registration totals into one.
+
+    :param registrationData:
+    :param precinct1:
+    :param precinct2:
+    :param outputPrecinct:
+    :return:
+    """
+
+    # search registration data for precinct 1 and remove from list
+    regTotal1 = regTotal2 = 0
+    precinct1Name = "a"
+    precinct2Name = "b"
+    year = 0
+
+    for i in range(len(registrationData)):
+        if registrationData[i]['PrecinctNumber'] == precinct1:
+            regTotal1 = registrationData[i]['RegisteredDems']
+            precinctName1 = registrationData[i]['PrecinctName']
+            year = registrationData[i]['Year']
+            del registrationData[i]
+
+    # search registration data for precinct 2 and remove from list
+    for i in range(len(registrationData)):
+        if registrationData[i]['PrecinctNumber'] == precinct2:
+            regTotal2 = registrationData[i]['RegisteredDems']
+            precinctName2 = registrationData[i]['PrecinctName']
+            del registrationData[i]
+
+    # add up the registered voters number
+    regTotal = regTotal1 + regTotal2
+    entry: RegisteredVoterData = {'PrecinctNumber': outputPrecinct,
+                                  'PrecinctName': precinct1Name,
+                                  'Year': year,
+                                  'RegisteredDems': regTotal}
+
+    # Add a new entry for this, using outputPrecinct number
+    registrationData.append(entry)
+
+
+def combineButlerRegistrationData(registrationData: List[RegisteredVoterData]):
+    """
+    This combines voter registration data from Cranberry Twp and Jefferson
+    precincts which are split into different congressional districts in
+    DoS data.
+
+    :param registrationData:
+    :return:
+    """
+
+    # Cranberry Twp
+    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 370, 371, 370)
+    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 375, 376, 375)
+    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 380, 381, 380)
+    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 410, 411, 410)
+
+    # Jefferson
+    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 544, 545, 544)
+    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 554, 555, 554)
+

@@ -25,6 +25,7 @@ def extractDemRegisteredByPrecinct(registrationData):
 
 def extractTurnoutByPrecinct(electionData):
     """
+    *** DEPRECATED - DO NOT USE ***
     So, our approach here is to look at Democratic turnout only in the US Presidential
     election - this may not reflect full turnout - it misses the cases where Dems may
     have voted in the presidential election for a different candidate than in a
@@ -56,6 +57,7 @@ def extractTurnoutByPrecinct(electionData):
 
 def combineRegistrationAndElectionDataByPrecinct(demRegistered, demTurnout, titlePrefix: str):
     """
+    *** DEPRECATED - DO NOT USE ***
     This takes in two lists of dictionaries - both filtered by County, one
     which contains dem voter registration data, and one which contains
     dem turnout data (for a specific election, usually US President),
