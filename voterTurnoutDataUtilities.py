@@ -29,9 +29,9 @@ def compareYoYDemTurnout(baseDirectory: str, precinctMap: List[PrecinctMap]) -> 
     voterTurnout2016 = loadVoterTurnoutData(baseDirectory, fileName2016, 2016)
     # Butler county is 10
     registeredDems2020 = loadVoterRegistrationData(baseDirectory, registeredFileName2020, 10)
-    combineButlerRegistrationData(registeredDems2020)
+    registeredDems2020 = combineButlerRegistrationData(registeredDems2020)
     registeredDems2016 = loadVoterRegistrationData(baseDirectory, registeredFileName2016, 10)
-    combineButlerRegistrationData(registeredDems2016)
+    registeredDems2016 = combineButlerRegistrationData(registeredDems2016)
 
     # ToDo: Iterate over every zone code in the precinct / zone map, and search both the
     # ToDo: registered voter maps and voter turnout maps for data for those zones. For
@@ -43,6 +43,7 @@ def compareYoYDemTurnout(baseDirectory: str, precinctMap: List[PrecinctMap]) -> 
     for item in precinctMap:
         turnoutPrecinctCode = item['VoteBuilderPrecinctNumber']
         registeredPrecinctCode = item['RegisteredDataPrecinctNumber']
+        print("Searching " + str(turnoutPrecinctCode) + " ," + str(registeredPrecinctCode))
         # Search 2016 data for voter turnout information
         turnout1 = next((x for x in voterTurnout2016 if x['PrecinctNumber'] == turnoutPrecinctCode), None)
         # Search 2020 data first for voter turnout information

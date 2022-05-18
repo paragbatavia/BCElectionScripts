@@ -96,7 +96,8 @@ def combineButlerCongressionalDistrictData(electionData):
 
 
 def combineButlerVoterRegistrationDataByPrecinctCodes(registrationData: List[RegisteredVoterData],
-                                                      precinct1: int, precinct2: int, outputPrecinct: int):
+                                                      precinct1: int, precinct2: int,
+                                                      outputPrecinct: int) -> List[RegisteredVoterData]:
     """
     Voter Registration data from the DoS is split by congressional district in some cases. The data
     from other sources, like VoteBuilder for turnout data, isn't. So, we need to combine the
@@ -116,21 +117,24 @@ def combineButlerVoterRegistrationDataByPrecinctCodes(registrationData: List[Reg
     year = 0
 
     for i in range(len(registrationData)):
-        if registrationData[i]['PrecinctNumber'] == precinct1:
+        if int(registrationData[i]['PrecinctNumber']) == precinct1:
+            print("Found precinct1")
             regTotal1 = registrationData[i]['RegisteredDems']
-            precinctName1 = registrationData[i]['PrecinctName']
+            precinct1Name = registrationData[i]['PrecinctName']
             year = registrationData[i]['Year']
             del registrationData[i]
+            break
 
     # search registration data for precinct 2 and remove from list
     for i in range(len(registrationData)):
-        if registrationData[i]['PrecinctNumber'] == precinct2:
+        if int(registrationData[i]['PrecinctNumber']) == precinct2:
             regTotal2 = registrationData[i]['RegisteredDems']
-            precinctName2 = registrationData[i]['PrecinctName']
+            precinct2Name = registrationData[i]['PrecinctName']
             del registrationData[i]
+            break
 
     # add up the registered voters number
-    regTotal = regTotal1 + regTotal2
+    regTotal = int(regTotal1) + int(regTotal2)
     entry: RegisteredVoterData = {'PrecinctNumber': outputPrecinct,
                                   'PrecinctName': precinct1Name,
                                   'Year': year,
@@ -139,8 +143,10 @@ def combineButlerVoterRegistrationDataByPrecinctCodes(registrationData: List[Reg
     # Add a new entry for this, using outputPrecinct number
     registrationData.append(entry)
 
+    return registrationData
 
-def combineButlerRegistrationData(registrationData: List[RegisteredVoterData]):
+
+def combineButlerRegistrationData(registrationData: List[RegisteredVoterData]) -> List[RegisteredVoterData]:
     """
     This combines voter registration data from Cranberry Twp and Jefferson
     precincts which are split into different congressional districts in
@@ -151,12 +157,15 @@ def combineButlerRegistrationData(registrationData: List[RegisteredVoterData]):
     """
 
     # Cranberry Twp
-    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 370, 371, 370)
-    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 375, 376, 375)
-    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 380, 381, 380)
-    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 410, 411, 410)
+    registrationData = combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 370, 371, 370)
+    registrationData = combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 375, 376, 375)
+    registrationData = combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 380, 381, 380)
+    registrationData = combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 410, 411, 410)
 
     # Jefferson
-    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 544, 545, 544)
-    combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 554, 555, 554)
+    registrationData = combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 544, 545, 544)
+    registrationData = combineButlerVoterRegistrationDataByPrecinctCodes(registrationData, 554, 555, 554)
+
+    return registrationData
+
 

@@ -4,6 +4,7 @@ from filterUtilities import *
 
 def extractDemRegisteredByPrecinct(registrationData):
     """
+    *** DEPRECATED - DELETE ***
     This will create a simple list of dictionaries with the following entries:
     - Municipality Code
     - Municipality Name
@@ -110,6 +111,7 @@ def combineRegistrationAndElectionDataByPrecinct(demRegistered, demTurnout, titl
 
 def combineVoterTurnoutByYearByPrecinct(turnoutData1, turnoutData2):
     """
+    *** DEPRECATED - DELETE ***
     This routine takes in two lists of dictionaries, each of which contains turnout information,
     and combines them.
 
@@ -139,6 +141,7 @@ def combineVoterTurnoutByYearByPrecinct(turnoutData1, turnoutData2):
 
 def extractVoterRegistrationTurnoutByPrecinct(registrationData, electionData, countyData, prefixTitle):
     """
+    *** DEPRECATED - DELETE ***
     This function takes in registration data and results data, pulls out all the Butler county
     data, and then creates a single output list of dictionaries that only includes the following
     keys:
@@ -168,6 +171,7 @@ def extractVoterRegistrationTurnoutByPrecinct(registrationData, electionData, co
 
 def processVoterTurnoutComparison(voter1, election1, prefix1, voter2, election2, prefix2, countyMap):
     """
+    *** DEPRECATED - DELETE ***
     This is a top-level routine to process and compare voter turnout information across two different
     sets of data.
 

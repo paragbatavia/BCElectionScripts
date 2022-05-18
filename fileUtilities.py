@@ -29,9 +29,9 @@ def loadPrecinctMap(baseDirectory: str, fileName: str) -> List[PrecinctMap]:
     with open(fullFileName, newline='') as csvfile:
         reader = csv.DictReader(csvfile, dialect='excel')
         for row in reader:
-            rzone = row['RegisteredDataPrecinctCode']
+            rzone = int(row['RegisteredDataPrecinctCode'])
             rtitle = row['RegisteredDataPrecinctName']
-            vzone = row['VoteBuilderPrecinctCode']
+            vzone = int(row['VoteBuilderPrecinctCode'])
             vtitle = row['VoteBuilderPrecinctName']
             mapItem = {'RegisteredDataPrecinctNumber': rzone,
                        'RegisteredDataPrecinctName': rtitle,
@@ -77,10 +77,10 @@ def loadVoterRegistrationData(baseDirectory: str, fileName: str, county: int) ->
             if int(row['CountyCode']) == county:
                 # We've found data from our county - start populating a data element
                 # print(row)
-                year = row['ElectionYear']
-                precinctcode = row['PrecinctCode']
+                year = int(row['ElectionYear'])
+                precinctcode = int(row['PrecinctCode'])
                 precinctname = row['MunicipalityName']
-                dems = row['DemRegistered']
+                dems = int(row['DemRegistered'])
                 voterItem = {'PrecinctNumber': precinctcode,
                              'PrecinctName': precinctname,
                              'Year': year,
@@ -106,10 +106,10 @@ def loadVoterTurnoutData(baseDirectory: str, fileName: str, year: int) -> List[T
     with open(fullFileName, newline='') as csvfile:
         reader = csv.DictReader(csvfile, dialect='excel')
         for row in reader:
-            pnumber = row["PrecinctCode"]
+            pnumber = int(row["PrecinctCode"])
             pname = row["Precinct"]
             newyear = year
-            voted = row["Turnout"]
+            voted = int(row["Turnout"])
             turnoutItem = {'PrecinctNumber': pnumber,
                            'PrecinctName': pname,
                            'Year': newyear,
